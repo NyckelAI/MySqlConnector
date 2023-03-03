@@ -399,9 +399,17 @@ public sealed class MySqlCommand : DbCommand, IMySqlCommand, ICancellableCommand
 	void ICancellableCommand.SetTimeout(int milliseconds)
 	{
 		if (m_cancelTimerId != 0)
-			TimerQueue.Instance.Remove(m_cancelTimerId);
-
-		if (milliseconds != Constants.InfiniteTimeout)
+		{
+			if (milliseconds == Constants.InfiniteTimeout)
+			{
+				TimerQueue.Instance.Remove(m_cancelTimerId);
+			}
+			else
+			{
+				TimerQueue.Instance.ResetDelay(m_cancelTimerId, milliseconds);
+			}
+		}
+		else if (milliseconds != Constants.InfiniteTimeout)
 		{
 			m_cancelForCommandTimeoutAction ??= CancelCommandForTimeout;
 			m_cancelTimerId = TimerQueue.Instance.Add(milliseconds, m_cancelForCommandTimeoutAction);
