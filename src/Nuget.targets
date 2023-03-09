@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <NYCKEL_NUGET_VERSION Condition="'$(NYCKEL_NUGET_VERSION)' == ''">1.0.0-local</NYCKEL_NUGET_VERSION>
+    <PackageVersion>$(NYCKEL_NUGET_VERSION)</PackageVersion>
+  </PropertyGroup>
+
+  <Target Name="DeleteLocalCache" BeforeTargets="Pack">
+    <RemoveDir Directories="$(NugetPackageRoot)/$(PackageId.ToLower())/1.0.0-local"/>
+  </Target>
+</Project>
